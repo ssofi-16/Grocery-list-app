@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grocery List</title>
+    <style>
+      :root {
+        color: #1f2933;
+        background: #f7faf8;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 22px;
+      }
+
+      .app {
+        width: min(100%, 720px);
+        display: grid;
+        align-content: start;
+        gap: 16px;
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 10px;
+      }
+
+      .mark {
+        display: grid;
+        width: 50px;
+        height: 50px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 10px;
+        color: #0f5132;
+        background: #d8f3dc;
+        font-size: 25px;
+        font-weight: 800;
+      }
+
+      h1 {
+        margin: 0;
+        color: #172026;
+        font-size: clamp(2rem, 9vw, 3.7rem);
+        line-height: 1;
+      }
+
+      .hint,
+      .status {
+        margin: 0;
+        color: #52616b;
+        line-height: 1.5;
+      }
+
+      .status {
+        border: 1px solid #d3ddd6;
+        border-radius: 8px;
+        padding: 12px 14px;
+        background: #ffffff;
+      }
+
+      .status.good {
+        color: #155c3d;
+        border-color: #b7dec8;
+        background: #eefaf2;
+      }
+
+      .status.warning {
+        color: #7a4a00;
+        border-color: #efd39a;
+        background: #fff8e8;
+      }
+
+      .status.error {
+        color: #8a1c1c;
+        border-color: #f1b6b6;
+        background: #fff0f0;
+      }
+
+      .row,
+      .share {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        grid-template-columns: 1fr 48px;
+      }
+
+      .share {
+        grid-template-columns: 1fr auto;
+      }
+
+      input {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid #d3ddd6;
+        border-radius: 8px;
+        padding: 0 14px;
+        color: #1f2933;
+        background: #ffffff;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: #2d6a4f;
+        box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.14);
+      }
+
+      button {
+        min-height: 44px;
+        border: 0;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      .primary {
+        color: #ffffff;
+        background: #2d6a4f;
+      }
+
+      .secondary {
+        padding: 0 14px;
+        color: #263238;
+        background: #e9f2ed;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .item {
+        display: grid;
+        min-height: 58px;
+        grid-template-columns: 38px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid #dfe8e2;
+        border-radius: 8px;
+        padding: 8px 10px;
+        background: #ffffff;
+      }
+
+      .check {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 2px solid #7ca891;
+        border-radius: 8px;
+        color: #ffffff;
+        background: #ffffff;
+      }
+
+      .done .check {
+        border-color: #2d6a4f;
+        background: #2d6a4f;
+      }
+
+      .text {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .done .text {
+        color: #7d8b84;
+        text-decoration: line-through;
+      }
+
+      .actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      .icon {
+        width: 40px;
+        height: 40px;
+        color: #263238;
+        background: #e9f2ed;
+      }
+
+      .danger {
+        color: #8a1c1c;
+        background: #fbe8e8;
+      }
+
+      .empty {
+        display: grid;
+        justify-items: center;
+        gap: 8px;
+        border: 1px dashed #bdcdc4;
+        border-radius: 8px;
+        padding: 28px 16px;
+        color: #66737d;
+        background: #ffffff;
+      }
+
+      @media (max-width: 560px) {
+        .page {
+          padding: 16px;
+        }
+
+        .share {
+          grid-template-columns: 1fr;
+        }
+
+        .item {
+          grid-template-columns: 34px minmax(0, 1fr);
+        }
+
+        .actions {
+          grid-column: 2;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="app">
+        <header class="top">
+          <div class="mark">GL</div>
+          <div>
+            <h1>Grocery List</h1>
+            <p class="hint">Add items, check them off, then share the live list.</p>
+          </div>
+        </header>
+
+        <p class="status" id="status">Opening the online grocery list...</p>
+
+        <form class="row" id="add-form">
+          <input id="new-item" placeholder="Add milk, apples, coffee..." />
+          <button class="primary" aria-label="Add item">+</button>
+        </form>
+
+        <div class="share">
+          <input id="share-link" readonly aria-label="Share link" />
+          <button class="secondary" id="share-button" type="button">Share</button>
+        </div>
+
+        <ul class="list" id="list"></ul>
+        <div class="empty" id="empty">
+          <div>GL</div>
+          <p>No items yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+      /*
+        This is an online-only standalone web app.
+        Add your Supabase values once, host this file, and the app will create
+        a unique live share link for every new list.
+      */
+      const SUPABASE_URL = "https://your-project-ref.supabase.co";
+      const SUPABASE_ANON_KEY = "your-supabase-anon-key";
+
+      const addForm = document.querySelector("#add-form");
+      const newItem = document.querySelector("#new-item");
+      const list = document.querySelector("#list");
+      const empty = document.querySelector("#empty");
+      const shareLink = document.querySelector("#share-link");
+      const shareButton = document.querySelector("#share-button");
+      const statusBox = document.querySelector("#status");
+
+      const appIsHosted = location.protocol === "http:" || location.protocol === "https:";
+      const databaseIsConnected =
+        SUPABASE_URL.includes("supabase.co") &&
+        !SUPABASE_URL.includes("your-project-ref") &&
+        !SUPABASE_ANON_KEY.includes("your-supabase-anon-key") &&
+        window.supabase;
+
+      const db = databaseIsConnected
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+      let items = [];
+      let currentList = null;
+      let channel = null;
+
+      start();
+
+      async function start() {
+        if (!appIsHosted) {
+          lockApp(
+            "This is a standalone website app. Upload this HTML file to a website host, then open the website link instead of the desktop file.",
+          );
+          return;
+        }
+
+        if (!databaseIsConnected) {
+          lockApp(
+            "The website is open, but the online database is not connected yet. Add the Supabase URL and anon key in this file.",
+          );
+          return;
+        }
+
+        await startOnlineList();
+      }
+
+      async function startOnlineList() {
+        const shareCode = getShareCode();
+
+        if (shareCode) {
+          const { data, error } = await db
+            .from("lists")
+            .select("id, name, share_code")
+            .eq("share_code", shareCode)
+            .single();
+
+          if (error) {
+            setStatus("That shared list was not found, so a fresh share link was made.", "warning");
+            await createOnlineList();
+          } else {
+            currentList = data;
+          }
+        } else {
+          await createOnlineList();
+        }
+
+        if (!currentList) return;
+
+        await loadOnlineItems();
+        subscribeToItems();
+        updateShareLink();
+        setStatus("Your live list is ready. Tap Share to invite someone.", "good");
+        render();
+      }
+
+      async function createOnlineList() {
+        const { data, error } = await db
+          .from("lists")
+          .insert({
+            name: "Grocery List",
+            share_code: makeShareCode(),
+          })
+          .select("id, name, share_code")
+          .single();
+
+        if (error) {
+          setStatus("The app could not create a share link yet. Please try refreshing.", "error");
+          return;
+        }
+
+        currentList = data;
+        history.replaceState({}, "", `#list=${currentList.share_code}`);
+      }
+
+      async function loadOnlineItems() {
+        if (!currentList) return;
+
+        const { data, error } = await db
+          .from("items")
+          .select("id, text, checked, created_at")
+          .eq("list_id", currentList.id)
+          .order("created_at", { ascending: true });
+
+        if (error) {
+          setStatus("Could not load items yet. Please refresh in a moment.", "warning");
+          return;
+        }
+
+        items = data || [];
+      }
+
+      function subscribeToItems() {
+        if (!currentList) return;
+
+        if (channel) db.removeChannel(channel);
+
+        channel = db
+          .channel(`items:${currentList.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "items",
+              filter: `list_id=eq.${currentList.id}`,
+            },
+            (payload) => {
+              if (payload.eventType === "INSERT") {
+                const exists = items.some((item) => item.id === payload.new.id);
+                if (!exists) items.push(payload.new);
+              }
+
+              if (payload.eventType === "UPDATE") {
+                items = items.map((item) =>
+                  item.id === payload.new.id ? payload.new : item,
+                );
+              }
+
+              if (payload.eventType === "DELETE") {
+                items = items.filter((item) => item.id !== payload.old.id);
+              }
+
+              sortItems();
+              render();
+            },
+          )
+          .subscribe();
+      }
+
+      function getShareCode() {
+        return new URLSearchParams(location.hash.slice(1)).get("list");
+      }
+
+      function makeShareCode() {
+        if (crypto.randomUUID) {
+          return crypto.randomUUID().replaceAll("-", "").slice(0, 12);
+        }
+
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      }
+
+      function setStatus(message, type) {
+        statusBox.textContent = message;
+        statusBox.className = type ? `status ${type}` : "status";
+      }
+
+      function lockApp(message) {
+        setStatus(message, "error");
+        newItem.disabled = true;
+        addForm.querySelector("button").disabled = true;
+        shareButton.disabled = true;
+        shareLink.value = "Online app link will appear here after setup";
+        render();
+      }
+
+      function sortItems() {
+        items.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+      }
+
+      function updateShareLink() {
+        if (databaseIsConnected && currentList) {
+          const cleanPath = location.pathname.replace(/OPEN_GROCERY_LIST\.html$/, "");
+          shareLink.value = `${location.origin}${cleanPath}#list=${currentList.share_code}`;
+          shareButton.disabled = false;
+          return;
+        }
+
+        shareLink.value = "Online share link will appear here";
+        shareButton.disabled = true;
+      }
+
+      function render() {
+        list.innerHTML = "";
+        empty.style.display = items.length ? "none" : "grid";
+
+        items.forEach((item) => {
+          const li = document.createElement("li");
+          li.className = item.checked ? "item done" : "item";
+
+          const check = document.createElement("button");
+          check.className = "check";
+          check.type = "button";
+          check.textContent = item.checked ? "OK" : "";
+          check.setAttribute(
+            "aria-label",
+            item.checked ? "Mark unchecked" : "Mark checked",
+          );
+          check.addEventListener("click", () => toggleItem(item));
+
+          const text = document.createElement("span");
+          text.className = "text";
+          text.textContent = item.text;
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+
+          const edit = document.createElement("button");
+          edit.className = "icon";
+          edit.type = "button";
+          edit.textContent = "Edit";
+          edit.addEventListener("click", () => editItem(item));
+
+          const remove = document.createElement("button");
+          remove.className = "icon danger";
+          remove.type = "button";
+          remove.textContent = "Delete";
+          remove.addEventListener("click", () => deleteItem(item));
+
+          actions.append(edit, remove);
+          li.append(check, text, actions);
+          list.append(li);
+        });
+
+        updateShareLink();
+      }
+
+      addForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const text = newItem.value.trim();
+        if (!text) return;
+
+        newItem.value = "";
+
+        if (databaseIsConnected && currentList) {
+          const { data, error } = await db
+            .from("items")
+            .insert({ list_id: currentList.id, text })
+            .select("id, text, checked, created_at")
+            .single();
+
+          if (error) {
+            setStatus(error.message, "warning");
+            newItem.value = text;
+            return;
+          }
+
+          const exists = items.some((item) => item.id === data.id);
+          if (!exists) items.push(data);
+        }
+
+        sortItems();
+        render();
+      });
+
+      async function toggleItem(item) {
+        const { error } = await db
+          .from("items")
+          .update({ checked: !item.checked })
+          .eq("id", item.id);
+
+        if (error) setStatus(error.message, "warning");
+      }
+
+      async function editItem(item) {
+        const nextText = prompt("Edit item", item.text);
+        if (!nextText || !nextText.trim()) return;
+
+        const { error } = await db
+          .from("items")
+          .update({ text: nextText.trim() })
+          .eq("id", item.id);
+
+        if (error) setStatus(error.message, "warning");
+      }
+
+      async function deleteItem(item) {
+        const { error } = await db.from("items").delete().eq("id", item.id);
+        if (error) setStatus(error.message, "warning");
+      }
+
+      shareButton.addEventListener("click", async () => {
+        shareLink.select();
+
+        if (navigator.share) {
+          await navigator.share({
+            title: "Grocery List",
+            text: "Join my grocery list",
+            url: shareLink.value,
+          });
+          return;
+        }
+
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(shareLink.value);
+        } else {
+          document.execCommand("copy");
+        }
+
+        shareButton.textContent = "Link copied";
+        setTimeout(() => {
+          shareButton.textContent = "Share";
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>
