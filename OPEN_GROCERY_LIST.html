@@ -260,7 +260,7 @@
           </div>
         </header>
 
-        <p class="status" id="status">Opening the online grocery list...</p>
+        <p class="status" id="status">Creating your grocery list...</p>
 
         <form class="row" id="add-form">
           <input id="new-item" placeholder="Add milk, apples, coffee..." />
@@ -318,14 +318,14 @@
       async function start() {
         if (!appIsHosted) {
           lockApp(
-            "This is a standalone website app. Upload this HTML file to a website host, then open the website link instead of the desktop file.",
+            "This app is not published yet. Please open the public website link.",
           );
           return;
         }
 
         if (!databaseIsConnected) {
           lockApp(
-            "The website is open, but the online database is not connected yet. Add the Supabase URL and anon key in this file.",
+            "This grocery list is not ready yet. Please try again later.",
           );
           return;
         }
@@ -458,7 +458,7 @@
         newItem.disabled = true;
         addForm.querySelector("button").disabled = true;
         shareButton.disabled = true;
-        shareLink.value = "Online app link will appear here after setup";
+        shareLink.value = "Your share link will appear here";
         render();
       }
 
@@ -474,7 +474,7 @@
           return;
         }
 
-        shareLink.value = "Online share link will appear here";
+        shareLink.value = "Your share link will appear here";
         shareButton.disabled = true;
       }
 

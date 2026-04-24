@@ -1,73 +1,51 @@
 # Grocery Together
 
-A real-time collaborative grocery list app built with React and Supabase.
+A simple collaborative grocery list website.
 
-This version is a standalone browser app. Nobody needs to install anything to use it once `index.html` is hosted online.
+Users open the website, add groceries, tap **Share**, and send the link to someone else. The shared online database stays invisible to users.
 
 ## Features
 
-- Create a grocery list from the home page.
-- Redirects to `/list/:shareCode` after creation.
-- Anyone with the share link can view and edit the same list.
-- Add, check, uncheck, rename, and delete items.
-- Supabase Realtime keeps every open copy of the list in sync.
-- Mobile-friendly layout with a simple sharing flow.
+- Automatically creates a grocery list when the website opens.
+- Creates a unique share link for each list.
+- Anyone with the link can view and edit the same list.
+- Add, check, uncheck, edit, and delete items.
+- Updates appear live for everyone on the same list.
+- Mobile-friendly, simple UI.
 
-## Supabase Setup
+## App Owner Setup
+
+Users do not need to know about Supabase. The app owner only needs to connect the online database once.
 
 1. Create a Supabase project.
 2. Open the SQL editor in Supabase.
-3. Run the SQL in `supabase/schema.sql`.
-4. In your Supabase project, go to **Project Settings > API**.
-5. Copy your Project URL and anon public key.
-
-The schema enables row-level security with public list and item access so anonymous users can collaborate by link. Treat the share code as the access secret.
-
-## Environment Variables
-
-No local environment variables are required for the standalone app.
-
-Open `index.html` and replace these values near the top of the file:
+3. Run `supabase/schema.sql`.
+4. In Supabase, go to **Project Settings > API**.
+5. Copy the Project URL and anon public key.
+6. Paste them into `OPEN_GROCERY_LIST.html`:
 
 ```js
-window.GROCERY_SUPABASE = {
-  url: "https://your-project-ref.supabase.co",
-  anonKey: "your-supabase-anon-key",
-};
+const SUPABASE_URL = "https://your-project-ref.supabase.co";
+const SUPABASE_ANON_KEY = "your-supabase-anon-key";
 ```
 
-The Supabase anon key is designed to be public in browser apps. Access is controlled by your database policies.
+The Supabase anon key is designed to be public in browser apps. Access is controlled by the database policies in `supabase/schema.sql`.
 
-## Open The App
+## Publish
 
-After adding your Supabase values, upload the project folder to any static web host, such as Netlify, Vercel, GitHub Pages, Cloudflare Pages, or Supabase Storage. The app only needs `index.html`, `styles.css`, and the optional routing files.
+Publish the repo with GitHub Pages or another static web host. Then users only need the website link.
 
-Then anyone can open the hosted app URL in a normal web browser. The app link itself is the home page; list links are created inside the app.
+The normal user flow is:
 
-## Share Links
+1. Open the grocery list website.
+2. Add items.
+3. Tap **Share**.
+4. Send the link.
 
-The app accepts both `/list/:shareCode` and `/#/list/:shareCode`.
+## GitHub Pages Link
 
-The copy button uses `/#/list/:shareCode` because hash links work on simple static hosting without any special server routing. For deployed static hosting, this project also includes:
+For this repo, the GitHub Pages link should be:
 
-- `public/_redirects` for Netlify-style hosts.
-- `vercel.json` for Vercel.
-
-If you deploy somewhere else and want the clean `/list/:shareCode` format to work when opened directly, configure all routes to serve `index.html`.
-
-## Database Tables
-
-`lists`
-
-- `id` UUID primary key
-- `name` text
-- `share_code` text unique
-- `created_at` timestamp
-
-`items`
-
-- `id` UUID primary key
-- `list_id` UUID foreign key referencing `lists(id)`
-- `text` text
-- `checked` boolean default false
-- `created_at` timestamp
+```text
+https://ssofi-16.github.io/Gricery-list-app/
+```
