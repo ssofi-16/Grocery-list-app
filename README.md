@@ -35,10 +35,11 @@ Users do not need to know about Supabase. The app owner only needs to connect th
 1. In your Supabase project, look at the left sidebar.
 2. Click **SQL Editor**.
 3. Click **New query**.
-4. Open `supabase/schema.sql` from this repo.
-5. Copy all of the SQL from that file.
-6. Paste it into the Supabase SQL editor.
-7. Click **Run**.
+4. Do **not** type `supabase/schema.sql` into Supabase.
+5. Open the local file named `supabase/schema.sql` in this project.
+6. Copy all of the SQL code inside that file.
+7. Paste the copied SQL code into the Supabase SQL editor.
+8. Click **Run**.
 
 ### 3. Copy The App Keys
 
