@@ -84,5 +84,5 @@ The normal user flow is:
 For this repo, the GitHub Pages link should be:
 
 ```text
-https://ssofi-16.github.io/Gricery-list-app/
+https://ssofi-16.github.io/Grocery-list-app/
 ```
