@@ -6,11 +6,70 @@
     <title>Grocery List</title>
     <style>
       :root {
-        color: #1f2933;
-        background: #f7faf8;
+        --color: #1f2933;
+        --bg: #f7faf8;
+        --border: #d3ddd6;
+        --bg-input: #ffffff;
+        --bg-card: #ffffff;
+        --border-card: #dfe8e2;
+        --primary: #2d6a4f;
+        --primary-text: #ffffff;
+        --secondary: #e9f2ed;
+        --secondary-text: #263238;
+        --accent: #0f5132;
+        --accent-bg: #d8f3dc;
+        --danger: #8a1c1c;
+        --danger-bg: #fbe8e8;
+        --check-border: #7ca891;
+        --check-bg: #ffffff;
+        --muted: #7d8b84;
+        --hint: #52616b;
+        --empty-border: #bdcdc4;
+        --empty-text: #66737d;
+        --status-good: #155c3d;
+        --status-good-bg: #eefaf2;
+        --status-good-border: #b7dec8;
+        --status-warning: #7a4a00;
+        --status-warning-bg: #fff8e8;
+        --status-warning-border: #efd39a;
+        --status-error: #8a1c1c;
+        --status-error-bg: #fff0f0;
+        --status-error-border: #f1b6b6;
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
           "Segoe UI", sans-serif;
+      }
+
+      [data-theme="dark"] {
+        --color: #e6e6e6;
+        --bg: #1a1a1a;
+        --border: #404040;
+        --bg-input: #2a2a2a;
+        --bg-card: #2a2a2a;
+        --border-card: #404040;
+        --primary: #4ade80;
+        --primary-text: #1a1a1a;
+        --secondary: #404040;
+        --secondary-text: #e6e6e6;
+        --accent: #4ade80;
+        --accent-bg: #1a3a2a;
+        --danger: #f87171;
+        --danger-bg: #3a1a1a;
+        --check-border: #6b8f7b;
+        --check-bg: #2a2a2a;
+        --muted: #6b6b6b;
+        --hint: #a0a0a0;
+        --empty-border: #404040;
+        --empty-text: #808080;
+        --status-good: #4ade80;
+        --status-good-bg: #1a3a2a;
+        --status-good-border: #2a5a3a;
+        --status-warning: #fbbf24;
+        --status-warning-bg: #3a2a1a;
+        --status-warning-border: #5a4a2a;
+        --status-error: #f87171;
+        --status-error-bg: #3a1a1a;
+        --status-error-border: #5a2a2a;
       }
 
       * {
@@ -19,6 +78,9 @@
 
       body {
         margin: 0;
+        background: var(--bg);
+        color: var(--color);
+        transition: background 0.3s, color 0.3s;
       }
 
       button,
@@ -58,15 +120,15 @@
         flex: 0 0 auto;
         place-items: center;
         border-radius: 10px;
-        color: #0f5132;
-        background: #d8f3dc;
+        color: var(--accent);
+        background: var(--accent-bg);
         font-size: 25px;
         font-weight: 800;
       }
 
       h1 {
         margin: 0;
-        color: #172026;
+        color: var(--color);
         font-size: clamp(2rem, 9vw, 3.7rem);
         line-height: 1;
       }
@@ -74,33 +136,33 @@
       .hint,
       .status {
         margin: 0;
-        color: #52616b;
+        color: var(--hint);
         line-height: 1.5;
       }
 
       .status {
-        border: 1px solid #d3ddd6;
+        border: 1px solid var(--border);
         border-radius: 8px;
         padding: 12px 14px;
-        background: #ffffff;
+        background: var(--bg-card);
       }
 
       .status.good {
-        color: #155c3d;
-        border-color: #b7dec8;
-        background: #eefaf2;
+        color: var(--status-good);
+        border-color: var(--status-good-border);
+        background: var(--status-good-bg);
       }
 
       .status.warning {
-        color: #7a4a00;
-        border-color: #efd39a;
-        background: #fff8e8;
+        color: var(--status-warning);
+        border-color: var(--status-warning-border);
+        background: var(--status-warning-bg);
       }
 
       .status.error {
-        color: #8a1c1c;
-        border-color: #f1b6b6;
-        background: #fff0f0;
+        color: var(--status-error);
+        border-color: var(--status-error-border);
+        background: var(--status-error-bg);
       }
 
       .row,
@@ -120,17 +182,21 @@
       input {
         width: 100%;
         min-height: 48px;
-        border: 1px solid #d3ddd6;
+        border: 1px solid var(--border);
         border-radius: 8px;
         padding: 0 14px;
-        color: #1f2933;
-        background: #ffffff;
+        color: var(--color);
+        background: var(--bg-input);
         outline: none;
       }
 
       input:focus {
-        border-color: #2d6a4f;
+        border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.14);
+      }
+
+      [data-theme="dark"] input:focus {
+        box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.14);
       }
 
       button {
@@ -146,14 +212,14 @@
       }
 
       .primary {
-        color: #ffffff;
-        background: #2d6a4f;
+        color: var(--primary-text);
+        background: var(--primary);
       }
 
       .secondary {
         padding: 0 14px;
-        color: #263238;
-        background: #e9f2ed;
+        color: var(--secondary-text);
+        background: var(--secondary);
       }
 
       .list {
@@ -170,10 +236,10 @@
         grid-template-columns: 38px minmax(0, 1fr) auto;
         align-items: center;
         gap: 10px;
-        border: 1px solid #dfe8e2;
+        border: 1px solid var(--border-card);
         border-radius: 8px;
         padding: 8px 10px;
-        background: #ffffff;
+        background: var(--bg-card);
       }
 
       .check {
@@ -181,15 +247,15 @@
         width: 30px;
         height: 30px;
         place-items: center;
-        border: 2px solid #7ca891;
+        border: 2px solid var(--check-border);
         border-radius: 8px;
-        color: #ffffff;
-        background: #ffffff;
+        color: var(--primary-text);
+        background: var(--check-bg);
       }
 
       .done .check {
-        border-color: #2d6a4f;
-        background: #2d6a4f;
+        border-color: var(--primary);
+        background: var(--primary);
       }
 
       .text {
@@ -198,7 +264,7 @@
       }
 
       .done .text {
-        color: #7d8b84;
+        color: var(--muted);
         text-decoration: line-through;
       }
 
@@ -210,24 +276,153 @@
       .icon {
         width: 40px;
         height: 40px;
-        color: #263238;
-        background: #e9f2ed;
+        color: var(--secondary-text);
+        background: var(--secondary);
       }
 
       .danger {
-        color: #8a1c1c;
-        background: #fbe8e8;
+        color: var(--danger);
+        background: var(--danger-bg);
       }
 
       .empty {
         display: grid;
         justify-items: center;
         gap: 8px;
-        border: 1px dashed #bdcdc4;
+        border: 1px dashed var(--empty-border);
         border-radius: 8px;
         padding: 28px 16px;
-        color: #66737d;
-        background: #ffffff;
+        color: var(--empty-text);
+        background: var(--bg-card);
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .toolbar button {
+        flex: 1;
+        min-width: 100px;
+        padding: 0 10px;
+        font-size: 0.85rem;
+      }
+
+      .settings-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .settings-bar > div {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .settings-btn {
+        min-height: 36px;
+        padding: 0 12px;
+        font-size: 0.8rem;
+      }
+
+      .lang-select {
+        min-height: 36px;
+        padding: 0 8px;
+        font-size: 0.85rem;
+        background: var(--secondary);
+        color: var(--secondary-text);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .theme-toggle {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 6px;
+        background: var(--secondary);
+        color: var(--secondary-text);
+        font-size: 1.1rem;
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        place-items: center;
+        z-index: 100;
+      }
+
+      .modal-overlay.show {
+        display: grid;
+      }
+
+      .modal {
+        background: var(--bg-card);
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 400px;
+        width: 90%;
+        display: grid;
+        gap: 16px;
+      }
+
+      .modal h2 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .modal p {
+        margin: 0;
+        line-height: 1.5;
+        color: var(--hint);
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .modal-buttons button {
+        flex: 1;
+      }
+
+      .undo-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 20px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 50;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+
+      .undo-toast.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .undo-toast button {
+        min-height: 32px;
+        padding: 0 14px;
+        font-size: 0.85rem;
       }
 
       @media (max-width: 560px) {
@@ -246,6 +441,15 @@
         .actions {
           grid-column: 2;
         }
+
+        .settings-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .settings-bar > div {
+          justify-content: center;
+        }
       }
     </style>
   </head>
@@ -255,33 +459,134 @@
         <header class="top">
           <div class="mark">GL</div>
           <div>
-            <h1>Grocery List</h1>
-            <p class="hint">Add items, check them off, then share the live list.</p>
+            <h1 data-i18n="title">Grocery List</h1>
+            <p class="hint" data-i18n="hint">Add items, check them off, then share the live list.</p>
           </div>
         </header>
 
-        <p class="status" id="status">Creating your grocery list...</p>
+        <div class="settings-bar">
+          <div>
+            <select class="lang-select" id="lang-select">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+          </div>
+        </div>
+
+        <p class="status" id="status" data-i18n="creating">Creating your grocery list...</p>
 
         <form class="row" id="add-form">
-          <input id="new-item" placeholder="Add milk, apples, coffee..." />
+          <input id="new-item" data-i18n-placeholder="addItem" placeholder="Add milk, apples, coffee..." />
           <button class="primary" aria-label="Add item">+</button>
         </form>
 
         <div class="share">
           <input id="share-link" readonly aria-label="Share link" />
-          <button class="secondary" id="share-button" type="button">Share</button>
+          <button class="secondary" id="share-button" type="button" data-i18n="share">Share</button>
+        </div>
+
+        <div class="toolbar">
+          <button class="secondary" id="clear-checked-btn" data-i18n="clearChecked">Clear Checked</button>
+          <button class="secondary danger" id="clear-all-btn" data-i18n="clearAll">Clear All</button>
         </div>
 
         <ul class="list" id="list"></ul>
         <div class="empty" id="empty">
           <div>GL</div>
-          <p>No items yet.</p>
+          <p data-i18n="noItems">No items yet.</p>
         </div>
       </section>
     </main>
 
+    <!-- Privacy Modal -->
+    <div class="modal-overlay" id="privacy-modal">
+      <div class="modal">
+        <h2 data-i18n="privacyTitle">Privacy Notice</h2>
+        <p data-i18n="privacyText">This grocery list uses Supabase (a database service) to store and sync your list in real-time. Your list data is stored on Supabase servers. By using this app, you acknowledge that your list may be accessible to others with the share link.</p>
+        <p data-i18n="privacyText2">No personal information is collected. Your data can be deleted at any time by clearing the list.</p>
+        <div class="modal-buttons">
+          <button class="secondary" id="privacy-decline" data-i18n="decline">Decline</button>
+          <button class="primary" id="privacy-accept" data-i18n="accept">Accept</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Undo Toast -->
+    <div class="undo-toast" id="undo-toast">
+      <span id="undo-message" data-i18n="itemsCleared">Items cleared</span>
+      <button class="secondary" id="undo-btn" data-i18n="undo">Undo</button>
+    </div>
+
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
+      // Translations
+      const translations = {
+        en: {
+          title: "Grocery List",
+          hint: "Add items, check them off, then share the live list.",
+          creating: "Creating your grocery list...",
+          addItem: "Add milk, apples, coffee...",
+          share: "Share",
+          clearChecked: "Clear Checked",
+          clearAll: "Clear All",
+          noItems: "No items yet.",
+          notPublished: "This app is not published yet. Please open the public website link.",
+          notReady: "This grocery list is not ready yet. Please try again later.",
+          listNotFound: "That shared list was not found, so a fresh share link was made.",
+          listReady: "Your live list is ready. Tap Share to invite someone.",
+          createFailed: "The app could not create a share link yet. Please try refreshing.",
+          loadFailed: "Could not load items yet. Please refresh in a moment.",
+          privacyTitle: "Privacy Notice",
+          privacyText: "This grocery list uses Supabase (a database service) to store and sync your list in real-time. Your list data is stored on Supabase servers. By using this app, you acknowledge that your list may be accessible to others with the share link.",
+          privacyText2: "No personal information is collected. Your data can be deleted at any time by clearing the list.",
+          decline: "Decline",
+          accept: "Accept",
+          itemsCleared: "Items cleared",
+          undo: "Undo",
+          checkedCleared: "Checked items cleared",
+          allCleared: "All items cleared",
+          markChecked: "Mark checked",
+          markUnchecked: "Mark unchecked"
+        },
+        es: {
+          title: "Lista de Compras",
+          hint: "Agrega artículos, márcalos y comparte la lista en vivo.",
+          creating: "Creando tu lista de compras...",
+          addItem: "Agregar leche, manzanas, café...",
+          share: "Compartir",
+          clearChecked: "Limpiar Marcados",
+          clearAll: "Limpiar Todo",
+          noItems: "Sin artículos aún.",
+          notPublished: "Esta aplicación aún no está publicada. Por favor abre el enlace del sitio web público.",
+          notReady: "Esta lista de compras aún no está lista. Por favor intenta más tarde.",
+          listNotFound: "Esa lista compartida no se encontró, así que se creó un nuevo enlace.",
+          listReady: "Tu lista en vivo está lista. Toca Compartir para invitar a alguien.",
+          createFailed: "La aplicación no pudo crear un enlace para compartir aún. Por favor intenta actualizar.",
+          loadFailed: "No se pudieron cargar los artículos aún. Por favor actualiza en un momento.",
+          privacyTitle: "Aviso de Privacidad",
+          privacyText: "Esta lista de compras usa Supabase (un servicio de base de datos) para almacenar y sincronizar tu lista en tiempo real. Tus datos se almacenan en servidores de Supabase. Al usar esta aplicación, reconoces que tu lista puede ser accesible para otros con el enlace compartido.",
+          privacyText2: "No se recolecta información personal. Tus datos pueden ser eliminados en cualquier momento limpiando la lista.",
+          decline: "Rechazar",
+          accept: "Aceptar",
+          itemsCleared: "Artículos eliminados",
+          undo: "Deshacer",
+          checkedCleared: "Artículos marcados eliminados",
+          allCleared: "Todos los artículos eliminados",
+          markChecked: "Marcar como hecho",
+          markUnchecked: "Desmarcar"
+        }
+      };
+
+      // Current language
+      let currentLang = localStorage.getItem("grocery-lang") || "en";
+      let currentTheme = localStorage.getItem("grocery-theme") || "light";
+      let privacyAccepted = localStorage.getItem("grocery-privacy") === "true";
+
+      // Undo functionality
+      let lastDeletedItems = [];
+      let undoTimeout = null;
+
       /*
         This is an online-only standalone web app.
         Add your Supabase values once, host this file, and the app will create
@@ -297,6 +602,16 @@
       const shareLink = document.querySelector("#share-link");
       const shareButton = document.querySelector("#share-button");
       const statusBox = document.querySelector("#status");
+      const langSelect = document.querySelector("#lang-select");
+      const themeToggle = document.querySelector("#theme-toggle");
+      const clearCheckedBtn = document.querySelector("#clear-checked-btn");
+      const clearAllBtn = document.querySelector("#clear-all-btn");
+      const privacyModal = document.querySelector("#privacy-modal");
+      const privacyAccept = document.querySelector("#privacy-accept");
+      const privacyDecline = document.querySelector("#privacy-decline");
+      const undoToast = document.querySelector("#undo-toast");
+      const undoBtn = document.querySelector("#undo-btn");
+      const undoMessage = document.querySelector("#undo-message");
 
       const appIsHosted = location.protocol === "http:" || location.protocol === "https:";
       const databaseIsConnected =
@@ -313,20 +628,55 @@
       let currentList = null;
       let channel = null;
 
+      // Apply theme
+      function applyTheme() {
+        if (currentTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          themeToggle.textContent = "☀️";
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+          themeToggle.textContent = "🌙";
+        }
+      }
+
+      // Apply language
+      function applyLanguage() {
+        const t = translations[currentLang];
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const key = el.getAttribute("data-i18n");
+          if (t[key]) el.textContent = t[key];
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+          const key = el.getAttribute("data-i18n-placeholder");
+          if (t[key]) el.placeholder = t[key];
+        });
+        langSelect.value = currentLang;
+      }
+
+      // t() helper
+      function t(key) {
+        return translations[currentLang][key] || translations.en[key] || key;
+      }
+
       start();
 
       async function start() {
+        // Apply saved settings
+        applyTheme();
+        applyLanguage();
+
+        // Show privacy modal if not accepted
+        if (!privacyAccepted) {
+          privacyModal.classList.add("show");
+        }
+
         if (!appIsHosted) {
-          lockApp(
-            "This app is not published yet. Please open the public website link.",
-          );
+          lockApp(t("notPublished"));
           return;
         }
 
         if (!databaseIsConnected) {
-          lockApp(
-            "This grocery list is not ready yet. Please try again later.",
-          );
+          lockApp(t("notReady"));
           return;
         }
 
@@ -344,7 +694,7 @@
             .single();
 
           if (error) {
-            setStatus("That shared list was not found, so a fresh share link was made.", "warning");
+            setStatus(t("listNotFound"), "warning");
             await createOnlineList();
           } else {
             currentList = data;
@@ -358,7 +708,7 @@
         await loadOnlineItems();
         subscribeToItems();
         updateShareLink();
-        setStatus("Your live list is ready. Tap Share to invite someone.", "good");
+        setStatus(t("listReady"), "good");
         render();
       }
 
@@ -373,7 +723,7 @@
           .single();
 
         if (error) {
-          setStatus("The app could not create a share link yet. Please try refreshing.", "error");
+          setStatus(t("createFailed"), "error");
           return;
         }
 
@@ -391,7 +741,7 @@
           .order("created_at", { ascending: true });
 
         if (error) {
-          setStatus("Could not load items yet. Please refresh in a moment.", "warning");
+          setStatus(t("loadFailed"), "warning");
           return;
         }
 
@@ -463,7 +813,13 @@
       }
 
       function sortItems() {
-        items.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+        // Unchecked items first, then checked items
+        items.sort((a, b) => {
+          if (a.checked === b.checked) {
+            return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+          }
+          return a.checked ? 1 : -1;
+        });
       }
 
       function updateShareLink() {
@@ -492,7 +848,7 @@
           check.textContent = item.checked ? "OK" : "";
           check.setAttribute(
             "aria-label",
-            item.checked ? "Mark unchecked" : "Mark checked",
+            item.checked ? t("markUnchecked") : t("markChecked"),
           );
           check.addEventListener("click", () => toggleItem(item));
 
@@ -597,8 +953,93 @@
 
         shareButton.textContent = "Link copied";
         setTimeout(() => {
-          shareButton.textContent = "Share";
+          shareButton.textContent = t("share");
         }, 1500);
+      });
+
+      // Language switch
+      langSelect.addEventListener("change", (e) => {
+        currentLang = e.target.value;
+        localStorage.setItem("grocery-lang", currentLang);
+        applyLanguage();
+        render();
+      });
+
+      // Theme toggle
+      themeToggle.addEventListener("click", () => {
+        currentTheme = currentTheme === "light" ? "dark" : "light";
+        localStorage.setItem("grocery-theme", currentTheme);
+        applyTheme();
+      });
+
+      // Clear checked items
+      clearCheckedBtn.addEventListener("click", async () => {
+        const checkedItems = items.filter(item => item.checked);
+        if (checkedItems.length === 0) return;
+
+        // Store for undo
+        lastDeletedItems = checkedItems.map(item => ({ ...item }));
+        showUndoToast(t("checkedCleared"));
+
+        for (const item of checkedItems) {
+          await db.from("items").delete().eq("id", item.id);
+        }
+      });
+
+      // Clear all items
+      clearAllBtn.addEventListener("click", async () => {
+        if (items.length === 0) return;
+
+        // Store for undo
+        lastDeletedItems = items.map(item => ({ ...item }));
+        showUndoToast(t("allCleared"));
+
+        for (const item of items) {
+          await db.from("items").delete().eq("id", item.id);
+        }
+      });
+
+      // Undo functionality
+      function showUndoToast(message) {
+        undoMessage.textContent = message;
+        undoToast.classList.add("show");
+
+        // Clear any existing timeout
+        if (undoTimeout) clearTimeout(undoTimeout);
+
+        // Auto-hide after 5 seconds
+        undoTimeout = setTimeout(() => {
+          hideUndoToast();
+        }, 5000);
+      }
+
+      function hideUndoToast() {
+        undoToast.classList.remove("show");
+        lastDeletedItems = [];
+      }
+
+      undoBtn.addEventListener("click", async () => {
+        for (const item of lastDeletedItems) {
+          await db
+            .from("items")
+            .insert({ list_id: currentList.id, text: item.text, checked: item.checked })
+            .select("id, text, checked, created_at");
+        }
+        hideUndoToast();
+        await loadOnlineItems();
+        render();
+      });
+
+      // Privacy modal handlers
+      privacyAccept.addEventListener("click", () => {
+        privacyAccepted = true;
+        localStorage.setItem("grocery-privacy", "true");
+        privacyModal.classList.remove("show");
+      });
+
+      privacyDecline.addEventListener("click", () => {
+        privacyModal.classList.remove("show");
+        lockApp("You must accept the privacy notice to use this app.");
       });
     </script>
   </body>
