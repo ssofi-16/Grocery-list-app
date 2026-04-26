@@ -470,7 +470,7 @@
               <option value="en">English</option>
               <option value="es">Español</option>
             </select>
-            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
           </div>
         </div>
 
@@ -503,8 +503,8 @@
     <div class="modal-overlay" id="privacy-modal">
       <div class="modal">
         <h2 data-i18n="privacyTitle">Privacy Notice</h2>
-        <p data-i18n="privacyText">This grocery list uses Supabase (a database service) to store and sync your list in real-time. Your list data is stored on Supabase servers. By using this app, you acknowledge that your list may be accessible to others with the share link.</p>
-        <p data-i18n="privacyText2">No personal information is collected. Your data can be deleted at any time by clearing the list.</p>
+        <p data-i18n="privacyText">This shared list stores grocery items online so everyone with the link can see updates. Anyone with the link can view and edit the list.</p>
+        <p data-i18n="privacyText2">Do not add sensitive personal information. You can remove list items at any time by clearing them.</p>
         <div class="modal-buttons">
           <button class="secondary" id="privacy-decline" data-i18n="decline">Decline</button>
           <button class="primary" id="privacy-accept" data-i18n="accept">Accept</button>
@@ -538,8 +538,8 @@
           createFailed: "The app could not create a share link yet. Please try refreshing.",
           loadFailed: "Could not load items yet. Please refresh in a moment.",
           privacyTitle: "Privacy Notice",
-          privacyText: "This grocery list uses Supabase (a database service) to store and sync your list in real-time. Your list data is stored on Supabase servers. By using this app, you acknowledge that your list may be accessible to others with the share link.",
-          privacyText2: "No personal information is collected. Your data can be deleted at any time by clearing the list.",
+          privacyText: "This shared list stores grocery items online so everyone with the link can see updates. Anyone with the link can view and edit the list.",
+          privacyText2: "Do not add sensitive personal information. You can remove list items at any time by clearing them.",
           decline: "Decline",
           accept: "Accept",
           itemsCleared: "Items cleared",
@@ -547,7 +547,15 @@
           checkedCleared: "Checked items cleared",
           allCleared: "All items cleared",
           markChecked: "Mark checked",
-          markUnchecked: "Mark unchecked"
+          markUnchecked: "Mark unchecked",
+          edit: "Edit",
+          delete: "Delete",
+          linkCopied: "Link copied",
+          shareTitle: "Grocery List",
+          shareText: "Join my grocery list",
+          privacyRequired: "You must accept the privacy notice to use this app.",
+          darkMode: "Dark",
+          lightMode: "Light"
         },
         es: {
           title: "Lista de Compras",
@@ -565,8 +573,8 @@
           createFailed: "La aplicación no pudo crear un enlace para compartir aún. Por favor intenta actualizar.",
           loadFailed: "No se pudieron cargar los artículos aún. Por favor actualiza en un momento.",
           privacyTitle: "Aviso de Privacidad",
-          privacyText: "Esta lista de compras usa Supabase (un servicio de base de datos) para almacenar y sincronizar tu lista en tiempo real. Tus datos se almacenan en servidores de Supabase. Al usar esta aplicación, reconoces que tu lista puede ser accesible para otros con el enlace compartido.",
-          privacyText2: "No se recolecta información personal. Tus datos pueden ser eliminados en cualquier momento limpiando la lista.",
+          privacyText: "Esta lista compartida guarda los articulos en linea para que todas las personas con el enlace vean los cambios. Cualquier persona con el enlace puede ver y editar la lista.",
+          privacyText2: "No agregues informacion personal sensible. Puedes eliminar articulos de la lista en cualquier momento.",
           decline: "Rechazar",
           accept: "Aceptar",
           itemsCleared: "Artículos eliminados",
@@ -574,7 +582,15 @@
           checkedCleared: "Artículos marcados eliminados",
           allCleared: "Todos los artículos eliminados",
           markChecked: "Marcar como hecho",
-          markUnchecked: "Desmarcar"
+          markUnchecked: "Desmarcar",
+          edit: "Editar",
+          delete: "Eliminar",
+          linkCopied: "Enlace copiado",
+          shareTitle: "Lista de Compras",
+          shareText: "Unete a mi lista de compras",
+          privacyRequired: "Debes aceptar el aviso de privacidad para usar esta app.",
+          darkMode: "Oscuro",
+          lightMode: "Claro"
         }
       };
 
@@ -632,10 +648,10 @@
       function applyTheme() {
         if (currentTheme === "dark") {
           document.documentElement.setAttribute("data-theme", "dark");
-          themeToggle.textContent = "☀️";
+          themeToggle.textContent = t("lightMode");
         } else {
           document.documentElement.removeAttribute("data-theme");
-          themeToggle.textContent = "🌙";
+          themeToggle.textContent = t("darkMode");
         }
       }
 
@@ -651,6 +667,7 @@
           if (t[key]) el.placeholder = t[key];
         });
         langSelect.value = currentLang;
+        applyTheme();
       }
 
       // t() helper
@@ -668,6 +685,7 @@
         // Show privacy modal if not accepted
         if (!privacyAccepted) {
           privacyModal.classList.add("show");
+          return;
         }
 
         if (!appIsHosted) {
@@ -746,6 +764,7 @@
         }
 
         items = data || [];
+        sortItems();
       }
 
       function subscribeToItems() {
@@ -808,6 +827,8 @@
         newItem.disabled = true;
         addForm.querySelector("button").disabled = true;
         shareButton.disabled = true;
+        clearCheckedBtn.disabled = true;
+        clearAllBtn.disabled = true;
         shareLink.value = "Your share link will appear here";
         render();
       }
@@ -862,13 +883,13 @@
           const edit = document.createElement("button");
           edit.className = "icon";
           edit.type = "button";
-          edit.textContent = "Edit";
+          edit.textContent = t("edit");
           edit.addEventListener("click", () => editItem(item));
 
           const remove = document.createElement("button");
           remove.className = "icon danger";
           remove.type = "button";
-          remove.textContent = "Delete";
+          remove.textContent = t("delete");
           remove.addEventListener("click", () => deleteItem(item));
 
           actions.append(edit, remove);
@@ -938,8 +959,8 @@
 
         if (navigator.share) {
           await navigator.share({
-            title: "Grocery List",
-            text: "Join my grocery list",
+            title: t("shareTitle"),
+            text: t("shareText"),
             url: shareLink.value,
           });
           return;
@@ -951,7 +972,7 @@
           document.execCommand("copy");
         }
 
-        shareButton.textContent = "Link copied";
+        shareButton.textContent = t("linkCopied");
         setTimeout(() => {
           shareButton.textContent = t("share");
         }, 1500);
@@ -1022,7 +1043,13 @@
         for (const item of lastDeletedItems) {
           await db
             .from("items")
-            .insert({ list_id: currentList.id, text: item.text, checked: item.checked })
+            .insert({
+              id: item.id,
+              list_id: currentList.id,
+              text: item.text,
+              checked: item.checked,
+              created_at: item.created_at,
+            })
             .select("id, text, checked, created_at");
         }
         hideUndoToast();
@@ -1035,11 +1062,12 @@
         privacyAccepted = true;
         localStorage.setItem("grocery-privacy", "true");
         privacyModal.classList.remove("show");
+        start();
       });
 
       privacyDecline.addEventListener("click", () => {
         privacyModal.classList.remove("show");
-        lockApp("You must accept the privacy notice to use this app.");
+        lockApp(t("privacyRequired"));
       });
     </script>
   </body>
