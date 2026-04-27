@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Grocery List</title>
     <style>
       :root {
@@ -457,7 +460,7 @@
     <main class="page">
       <section class="app">
         <header class="top">
-          <div class="mark">🛒</div>
+          <div class="mark">&#128722;</div>
           <div>
             <h1 data-i18n="title">Grocery List</h1>
             <p class="hint" data-i18n="hint">Add items, check them off, then share the live list.</p>
@@ -474,7 +477,7 @@
           </div>
         </div>
 
-        <p class="status" id="status" data-i18n="creating">Creating your grocery list...</p>
+        <p class="status" id="status">Creating your grocery list...</p>
 
         <form class="row" id="add-form">
           <input id="new-item" data-i18n-placeholder="addItem" placeholder="Add milk, apples, coffee..." />
@@ -493,7 +496,7 @@
 
         <ul class="list" id="list"></ul>
         <div class="empty" id="empty">
-          <div>GL</div>
+          <div>&#128722;</div>
           <p data-i18n="noItems">No items yet.</p>
         </div>
       </section>
@@ -595,7 +598,8 @@
       };
 
       // Current language
-      let currentLang = localStorage.getItem("grocery-lang") || "en";
+      localStorage.removeItem("grocery-lang");
+      let currentLang = "en";
       let currentTheme = localStorage.getItem("grocery-theme") || "light";
       let privacyAccepted = localStorage.getItem("grocery-privacy") === "true";
 
@@ -643,6 +647,8 @@
       let items = [];
       let currentList = null;
       let channel = null;
+      let currentStatusKey = "creating";
+      let currentStatusType = "";
 
       // Apply theme
       function applyTheme() {
@@ -668,11 +674,20 @@
         });
         langSelect.value = currentLang;
         applyTheme();
+        refreshStatusText();
       }
 
       // t() helper
       function t(key) {
         return translations[currentLang][key] || translations.en[key] || key;
+      }
+
+      function refreshStatusText() {
+        if (!currentStatusKey) return;
+        statusBox.textContent = t(currentStatusKey);
+        statusBox.className = currentStatusType
+          ? `status ${currentStatusType}`
+          : "status";
       }
 
       start();
@@ -689,12 +704,12 @@
         }
 
         if (!appIsHosted) {
-          lockApp(t("notPublished"));
+          lockApp("notPublished");
           return;
         }
 
         if (!databaseIsConnected) {
-          lockApp(t("notReady"));
+          lockApp("notReady");
           return;
         }
 
@@ -712,7 +727,7 @@
             .single();
 
           if (error) {
-            setStatus(t("listNotFound"), "warning");
+            setStatusKey("listNotFound", "warning");
             await createOnlineList();
           } else {
             currentList = data;
@@ -726,7 +741,7 @@
         await loadOnlineItems();
         subscribeToItems();
         updateShareLink();
-        setStatus(t("listReady"), "good");
+        setStatusKey("listReady", "good");
         render();
       }
 
@@ -741,7 +756,7 @@
           .single();
 
         if (error) {
-          setStatus(t("createFailed"), "error");
+          setStatusKey("createFailed", "error");
           return;
         }
 
@@ -759,7 +774,7 @@
           .order("created_at", { ascending: true });
 
         if (error) {
-          setStatus(t("loadFailed"), "warning");
+          setStatusKey("loadFailed", "warning");
           return;
         }
 
@@ -818,12 +833,20 @@
       }
 
       function setStatus(message, type) {
+        currentStatusKey = "";
+        currentStatusType = type || "";
         statusBox.textContent = message;
         statusBox.className = type ? `status ${type}` : "status";
       }
 
-      function lockApp(message) {
-        setStatus(message, "error");
+      function setStatusKey(key, type) {
+        currentStatusKey = key;
+        currentStatusType = type || "";
+        refreshStatusText();
+      }
+
+      function lockApp(key) {
+        setStatusKey(key, "error");
         newItem.disabled = true;
         addForm.querySelector("button").disabled = true;
         shareButton.disabled = true;
@@ -981,7 +1004,6 @@
       // Language switch
       langSelect.addEventListener("change", (e) => {
         currentLang = e.target.value;
-        localStorage.setItem("grocery-lang", currentLang);
         applyLanguage();
         render();
       });
@@ -1067,7 +1089,7 @@
 
       privacyDecline.addEventListener("click", () => {
         privacyModal.classList.remove("show");
-        lockApp(t("privacyRequired"));
+        lockApp("privacyRequired");
       });
     </script>
   </body>
