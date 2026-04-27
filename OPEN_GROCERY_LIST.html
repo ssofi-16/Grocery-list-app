@@ -91,6 +91,7 @@
         font: inherit;
       }
 
+      /* All buttons */
       button {
         cursor: pointer;
       }
@@ -202,6 +203,7 @@
         box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.14);
       }
 
+      /* Base button box */
       button {
         min-height: 44px;
         border: 0;
@@ -209,16 +211,19 @@
         font-weight: 700;
       }
 
+      /* Disabled buttons */
       button:disabled {
         cursor: not-allowed;
         opacity: 0.55;
       }
 
+      /* Add item and Accept privacy buttons */
       .primary {
         color: var(--primary-text);
         background: var(--primary);
       }
 
+      /* Share, Clear Checked, Privacy, Decline, and Undo buttons */
       .secondary {
         padding: 0 14px;
         color: var(--secondary-text);
@@ -245,6 +250,7 @@
         background: var(--bg-card);
       }
 
+      /* Check/uncheck item button */
       .check {
         display: grid;
         width: 30px;
@@ -256,6 +262,7 @@
         background: var(--check-bg);
       }
 
+      /* Checked state for check/uncheck item button */
       .done .check {
         border-color: var(--primary);
         background: var(--primary);
@@ -284,6 +291,7 @@
         background: var(--secondary);
       }
 
+      /* Delete and Clear All danger buttons */
       .danger {
         color: var(--danger);
         background: var(--danger-bg);
@@ -300,12 +308,14 @@
         background: var(--bg-card);
       }
 
+      /* Clear Checked and Clear All button row */
       .toolbar {
         display: flex;
         gap: 8px;
         flex-wrap: wrap;
       }
 
+      /* Clear Checked and Clear All button sizes */
       .toolbar button {
         flex: 1;
         min-width: 100px;
@@ -327,12 +337,14 @@
         align-items: center;
       }
 
+      /* Privacy button */
       .settings-btn {
         min-height: 36px;
         padding: 0 12px;
         font-size: 0.8rem;
       }
 
+      /* Language selector */
       .lang-select {
         min-height: 36px;
         padding: 0 8px;
@@ -344,6 +356,7 @@
         cursor: pointer;
       }
 
+      /* Light/Dark mode button */
       .theme-toggle {
         width: auto;
         min-width: 68px;
@@ -392,11 +405,13 @@
         color: var(--hint);
       }
 
+      /* Privacy modal button row */
       .modal-buttons {
         display: flex;
         gap: 10px;
       }
 
+      /* Privacy modal Decline/Accept buttons */
       .modal-buttons button {
         flex: 1;
       }
@@ -425,6 +440,7 @@
         pointer-events: auto;
       }
 
+      /* Undo button */
       .undo-toast button {
         min-height: 32px;
         padding: 0 14px;
