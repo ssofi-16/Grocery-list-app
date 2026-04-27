@@ -122,7 +122,7 @@
         border-radius: 10px;
         color: var(--accent);
         background: var(--accent-bg);
-        font-size: 25px;
+        font-size: 26px;
         font-weight: 800;
       }
 
@@ -271,11 +271,14 @@
       .actions {
         display: flex;
         gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
 
       .icon {
-        width: 40px;
+        min-width: 58px;
         height: 40px;
+        padding: 0 10px;
         color: var(--secondary-text);
         background: var(--secondary);
       }
@@ -457,7 +460,7 @@
     <main class="page">
       <section class="app">
         <header class="top">
-          <div class="mark">GL</div>
+          <div class="mark">🛒</div>
           <div>
             <h1 data-i18n="title">Grocery List</h1>
             <p class="hint" data-i18n="hint">Add items, check them off, then share the live list.</p>
@@ -493,7 +496,7 @@
 
         <ul class="list" id="list"></ul>
         <div class="empty" id="empty">
-          <div>GL</div>
+          <div>🛒</div>
           <p data-i18n="noItems">No items yet.</p>
         </div>
       </section>
