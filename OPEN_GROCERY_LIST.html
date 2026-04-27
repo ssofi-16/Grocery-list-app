@@ -474,6 +474,7 @@
               <option value="es">Español</option>
             </select>
             <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
+            <button class="secondary settings-btn" id="privacy-button" type="button" data-i18n="privacyShort">Privacy</button>
           </div>
         </div>
 
@@ -558,7 +559,8 @@
           shareText: "Join my grocery list",
           privacyRequired: "You must accept the privacy notice to use this app.",
           darkMode: "Dark",
-          lightMode: "Light"
+          lightMode: "Light",
+          privacyShort: "Privacy"
         },
         es: {
           title: "Lista de Compras",
@@ -593,14 +595,17 @@
           shareText: "Unete a mi lista de compras",
           privacyRequired: "Debes aceptar el aviso de privacidad para usar esta app.",
           darkMode: "Oscuro",
-          lightMode: "Claro"
+          lightMode: "Claro",
+          privacyShort: "Privacidad"
         }
       };
 
       // Current language
+      const privacyVersion = "2026-04-26";
       let currentLang = localStorage.getItem("grocery-lang") || "en";
       let currentTheme = localStorage.getItem("grocery-theme") || "light";
-      let privacyAccepted = localStorage.getItem("grocery-privacy") === "true";
+      let privacyAccepted =
+        localStorage.getItem("grocery-privacy-version") === privacyVersion;
 
       // Undo functionality
       let lastDeletedItems = [];
@@ -626,6 +631,7 @@
       const clearCheckedBtn = document.querySelector("#clear-checked-btn");
       const clearAllBtn = document.querySelector("#clear-all-btn");
       const privacyModal = document.querySelector("#privacy-modal");
+      const privacyButton = document.querySelector("#privacy-button");
       const privacyAccept = document.querySelector("#privacy-accept");
       const privacyDecline = document.querySelector("#privacy-decline");
       const undoToast = document.querySelector("#undo-toast");
@@ -1063,7 +1069,7 @@
       // Privacy modal handlers
       privacyAccept.addEventListener("click", () => {
         privacyAccepted = true;
-        localStorage.setItem("grocery-privacy", "true");
+        localStorage.setItem("grocery-privacy-version", privacyVersion);
         privacyModal.classList.remove("show");
         start();
       });
@@ -1071,6 +1077,10 @@
       privacyDecline.addEventListener("click", () => {
         privacyModal.classList.remove("show");
         lockApp(t("privacyRequired"));
+      });
+
+      privacyButton.addEventListener("click", () => {
+        privacyModal.classList.add("show");
       });
     </script>
   </body>
